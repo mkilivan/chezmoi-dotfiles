@@ -107,6 +107,31 @@ else
   fi
 fi
 
+# libtmux (python) — required by the tmux-window-name plugin
+if python3 -c "import libtmux" &>/dev/null; then
+  skip "libtmux (python)" "already present"
+else
+  if ! command -v python3 &>/dev/null; then
+    if [ "$OS" = "Darwin" ]; then
+      info "Installing python3 (Homebrew) for tmux-window-name plugin"
+      brew install python3 || warn "python3 not installed; tmux-window-name plugin renaming will not work"
+    else
+      warn "python3 not found; tmux-window-name plugin renaming will not work"
+    fi
+  fi
+
+  if command -v python3 &>/dev/null; then
+    info "Installing libtmux (python) for tmux-window-name plugin"
+    if python3 -m pip install --user libtmux &>/dev/null; then
+      done_ "libtmux" "installed"
+    elif python3 -m pip install --user --break-system-packages libtmux &>/dev/null; then
+      done_ "libtmux" "installed (--break-system-packages)"
+    else
+      warn "libtmux not installed; tmux-window-name plugin renaming will not work"
+    fi
+  fi
+fi
+
 # tpm (tmux plugin manager)
 if [ -d ~/.tmux/plugins/tpm ]; then
   echo "==> tpm already installed, skipping"

@@ -53,8 +53,9 @@ Installed automatically by `run_once_install-packages.sh` on first `chezmoi appl
 | [fzf](https://github.com/junegunn/fzf) | Fuzzy finder (`Ctrl-R` history, `Ctrl-T` files) |
 | [eza](https://github.com/eza-community/eza) | Modern `ls` replacement |
 | [tpm](https://github.com/tmux-plugins/tpm) | Tmux plugin manager |
+| [libtmux](https://github.com/tmux-python/libtmux) (pip, `--user`) | Python dependency for the tmux-window-name plugin |
 
-After tpm is installed, press `prefix + I` inside tmux to install plugins (tmux-resurrect, tmux-continuum).
+After tpm is installed, press `prefix + I` inside tmux to install plugins (tmux-resurrect, tmux-continuum, tmux-window-name, catppuccin).
 
 ## Key configuration notes
 
