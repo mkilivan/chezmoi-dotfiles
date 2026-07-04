@@ -107,6 +107,19 @@ else
   fi
 fi
 
+# xclip — clipboard backend tmux-yank uses on Linux/X11 (macOS uses the
+# built-in pbcopy/pbpaste, nothing to install there)
+if [ "$OS" = "Darwin" ]; then
+  skip "clipboard tool" "pbcopy/pbpaste built in"
+elif command -v xclip &>/dev/null; then
+  skip "xclip" "$(version xclip -version)"
+else
+  info "Installing xclip"
+  if try_install_apt xclip; then
+    done_ "xclip" "$(version xclip -version)"
+  fi
+fi
+
 # libtmux (python) — required by the tmux-window-name plugin
 if python3 -c "import libtmux" &>/dev/null; then
   skip "libtmux (python)" "already present"
