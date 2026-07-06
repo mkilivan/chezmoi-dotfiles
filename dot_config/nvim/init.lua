@@ -69,3 +69,8 @@ require("lazy").setup({
     colorscheme = { "catppuccin" },
   },
 })
+
+-- Ubuntu 26.04: parsers are under /usr/lib/nvim/parser, so keep it on runtimepath after lazy.nvim adjusts it.
+if vim.loop.fs_stat("/usr/lib/nvim/parser") then
+  vim.opt.rtp:append("/usr/lib/nvim")
+end
