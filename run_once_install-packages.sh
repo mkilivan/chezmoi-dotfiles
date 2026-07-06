@@ -107,6 +107,24 @@ else
   fi
 fi
 
+# neovim
+if command -v nvim &>/dev/null; then
+  skip "neovim" "$(version nvim --version)"
+else
+  info "Installing neovim"
+  if [ "$OS" = "Darwin" ]; then
+    if brew install neovim; then
+      done_ "neovim" "$(version nvim --version)"
+    else
+      warn "neovim not installed"
+    fi
+  else
+    if try_install_apt neovim; then
+      done_ "neovim" "$(version nvim --version)"
+    fi
+  fi
+fi
+
 # xclip — clipboard backend tmux-yank uses on Linux/X11 (macOS uses the
 # built-in pbcopy/pbpaste, nothing to install there)
 if [ "$OS" = "Darwin" ]; then

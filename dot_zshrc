@@ -1,4 +1,4 @@
-export PATH="/usr/local/bin:/usr/local/sbin:~/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$PATH"
 
 export EDITOR="code"
 export VISUAL="code"
@@ -118,6 +118,7 @@ function extract() {
     echo
     echo Options:
     echo "    -r, --remove    Remove archive."
+    return 1
   fi
 
   remove_archive=1
@@ -151,7 +152,7 @@ function extract() {
       (*.xz) unxz "$1" ;;
       (*.lzma) unlzma "$1" ;;
       (*.Z) uncompress "$1" ;;
-      (*.zip) unzip "$1" -d $extract_dir ;;
+      (*.zip) unzip "$1" -d "$extract_dir" ;;
       (*.rar) unrar e -ad "$1" ;;
       (*.7z) 7za x "$1" ;;
       (*.deb)
@@ -180,7 +181,7 @@ function extract() {
 ###########
 
 # FZF — fuzzy finder (Ctrl-R for history, Ctrl-T for files)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # Zoxide — smarter cd (replaces autojump); use: z <dir>
 if command -v zoxide >/dev/null 2>&1; then
