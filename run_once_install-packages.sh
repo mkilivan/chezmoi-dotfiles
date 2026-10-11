@@ -33,8 +33,9 @@ else
       warn "starship not installed"
     fi
   else
-    if curl -sS https://starship.rs/install.sh | sh -s -- --yes; then
-      done_ "starship" "$(version starship --version)"
+    if mkdir -p "$HOME/.local/bin" &&
+      curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"; then
+      done_ "starship" "$(version "$HOME/.local/bin/starship" --version)"
     else
       warn "starship not installed"
     fi
@@ -86,8 +87,26 @@ else
     brew install eza
     done_ "eza" "$(version eza --version)"
   else
-    if try_install_apt eza; then
-      done_ "eza" "$(version eza --version)"
+    case "$(uname -m)" in
+      x86_64) eza_arch="x86_64-unknown-linux-gnu" ;;
+      aarch64|arm64) eza_arch="aarch64-unknown-linux-gnu" ;;
+      *) eza_arch="" ;;
+    esac
+
+    if [ -z "$eza_arch" ]; then
+      warn "eza prebuilt binary unavailable for Linux architecture $(uname -m)"
+    else
+      eza_tmpdir="$(mktemp -d)"
+      if mkdir -p "$HOME/.local/bin" &&
+        curl -fsSL "https://github.com/eza-community/eza/releases/latest/download/eza_${eza_arch}.tar.gz" \
+          -o "$eza_tmpdir/eza.tar.gz" &&
+        tar -xzf "$eza_tmpdir/eza.tar.gz" -C "$eza_tmpdir" &&
+        install -m 755 "$eza_tmpdir/eza" "$HOME/.local/bin/eza"; then
+        done_ "eza" "$(version "$HOME/.local/bin/eza" --version)"
+      else
+        warn "eza not installed"
+      fi
+      rm -rf "$eza_tmpdir"
     fi
   fi
 fi

@@ -1,6 +1,6 @@
 # Personal bash additions — managed by chezmoi, sourced from ~/.bashrc
 
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # fzf binary path (git install on Linux)
 [ -d "$HOME/.fzf/bin" ] && export PATH="$HOME/.fzf/bin:$PATH"
@@ -14,9 +14,9 @@ fi
 
 {{ if eq .chezmoi.os "darwin" -}}
 # Homebrew (Apple Silicon)
-[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-# Homebrew (Intel)
-[ -f /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 {{ end -}}
 
 # Starship prompt
