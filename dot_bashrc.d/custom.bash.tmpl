@@ -1,0 +1,155 @@
+# Personal bash additions — managed by chezmoi.
+# Applied to ~/.bashrc.d/custom.bash, which the stock RHEL/Fedora ~/.bashrc
+# sources automatically.
+
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# fzf binary path (git install on Linux)
+[ -d "$HOME/.fzf/bin" ] && export PATH="$HOME/.fzf/bin:$PATH"
+
+{{ if eq .chezmoi.os "darwin" -}}
+# Homebrew (Apple Silicon)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+{{ end -}}
+
+export EDITOR="code"
+export VISUAL="code"
+export BROWSER="google-chrome"
+export PAGER=less
+export LC_CTYPE=$LANG
+
+# Everything below is for interactive shells only
+[[ $- == *i* ]] || return 0
+
+###########
+# HISTORY #
+###########
+
+HISTFILE=$HOME/.bash_history
+HISTSIZE=100000
+HISTFILESIZE=100000
+HISTCONTROL=ignoreboth:erasedups   # ignore dups and space-prefixed commands
+HISTTIMEFORMAT='%F %T '
+shopt -s histappend                # append, don't overwrite
+shopt -s cmdhist                   # multi-line commands as one entry
+
+# Share history between open terminals: write new lines and read others'
+# after every command. Set before starship init, which moves it into
+# STARSHIP_PROMPT_COMMAND and runs it from its own hook.
+PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+###########
+# ALIASES #
+###########
+
+# eza — modern ls replacement
+if command -v eza &>/dev/null; then
+    alias ls='eza --color=auto'
+    alias ll='eza -la --git'
+    alias l='eza -la'
+    alias lsa='eza -la --git'
+fi
+alias sl=ls
+
+alias d="git diff"
+alias c="clear"
+alias rm="rm -f"
+alias x=extract
+
+# Directories
+alias ..='cd ..'
+alias cd..='cd ..'
+
+###########
+# PLUGINS #
+###########
+
+function extract() {
+  local remove_archive
+  local success
+  local file_name
+  local extract_dir
+
+  if (( $# == 0 )); then
+    echo "Usage: extract [-option] [file ...]"
+    echo
+    echo Options:
+    echo "    -r, --remove    Remove archive."
+    return 1
+  fi
+
+  remove_archive=1
+  if [[ "$1" == "-r" ]] || [[ "$1" == "--remove" ]]; then
+    remove_archive=0
+    shift
+  fi
+
+  while (( $# > 0 )); do
+    if [[ ! -f "$1" ]]; then
+      echo "extract: '$1' is not a valid file" 1>&2
+      shift
+      continue
+    fi
+
+    success=0
+    file_name="$( basename "$1" )"
+    extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
+    case "$1" in
+      (*.tar.gz|*.tgz) tar xvzf "$1" ;;
+      (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$1" ;;
+      (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
+        && tar --xz -xvf "$1" \
+        || xzcat "$1" | tar xvf - ;;
+      (*.tar.zma|*.tlz) tar --lzma --help &> /dev/null \
+        && tar --lzma -xvf "$1" \
+        || lzcat "$1" | tar xvf - ;;
+      (*.tar) tar xvf "$1" ;;
+      (*.gz) gunzip "$1" ;;
+      (*.bz2) bunzip2 "$1" ;;
+      (*.xz) unxz "$1" ;;
+      (*.lzma) unlzma "$1" ;;
+      (*.Z) uncompress "$1" ;;
+      (*.zip) unzip "$1" -d "$extract_dir" ;;
+      (*.rar) unrar e -ad "$1" ;;
+      (*.7z) 7za x "$1" ;;
+      (*.deb)
+        mkdir -p "$extract_dir/control"
+        mkdir -p "$extract_dir/data"
+        cd "$extract_dir"; ar vx "../${1}" > /dev/null
+        cd control; tar xzvf ../control.tar.gz
+        cd ../data; tar xzvf ../data.tar.gz
+        cd ..; rm *.tar.gz debian-binary
+        cd ..
+      ;;
+      (*)
+        echo "extract: '$1' cannot be extracted" 1>&2
+        success=1
+      ;;
+    esac
+
+    (( success = $success > 0 ? $success : $? ))
+    (( $success == 0 )) && (( $remove_archive == 0 )) && rm "$1"
+    shift
+  done
+}
+
+###########
+# TOOLING #
+###########
+
+# Starship prompt
+command -v starship &>/dev/null && eval "$(starship init bash)"
+
+# fzf - keybindings and completion for Bash (Ctrl-R history, Ctrl-T files)
+if command -v fzf &>/dev/null; then
+    eval "$(fzf --bash)" 2>/dev/null || { [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"; }
+elif [ -f "$HOME/.fzf.bash" ]; then
+    source "$HOME/.fzf.bash"
+fi
+
+# Zoxide — smarter cd (replaces autojump); use: z <dir>
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
+fi
