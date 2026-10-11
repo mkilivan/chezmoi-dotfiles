@@ -1,49 +1,48 @@
 # dotfiles
 
-Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/).
+My shell, git, tmux and Neovim config for macOS and Linux, managed with [chezmoi](https://www.chezmoi.io/).
 
-## Bootstrap
+## Setup
 
-> macOS prerequisite: [Homebrew](https://brew.sh/) must be installed before running `chezmoi apply` — the install script uses it for zoxide, fzf, eza, and the Nerd Font.
+**macOS only:** install [Homebrew](https://brew.sh/) first.
+
+1. Install chezmoi and apply the dotfiles:
+
+   ```bash
+   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply mkilivan
+   ```
+
+   It asks for your name, email and GitHub username (used for git), then installs the tools. No sudo needed on Linux. If a tool needs a system package, the last line tells you what to install.
+
+2. Open a new terminal.
+
+   On Linux, if the new config doesn't load (e.g. on Ubuntu), run this once:
+
+   ```bash
+   echo 'for rc in ~/.bashrc.d/*; do [ -f "$rc" ] && . "$rc"; done; unset rc' >> ~/.bashrc
+   ```
+
+3. Set your terminal font to **JetBrainsMono Nerd Font** so prompt icons show up.
+
+4. In tmux, press `Ctrl-a` then `I` to install the plugins.
+
+## Daily use
+
+| Task | Command |
+|------|---------|
+| Edit a file | `chezmoi edit ~/.zshrc` |
+| See what would change | `chezmoi diff` |
+| Apply changes | `chezmoi apply` |
+| Pull in updates from GitHub | `chezmoi update` |
+
+Until your shell config is loaded, run chezmoi as `~/.local/bin/chezmoi`.
+
+## Optional: use zsh on Linux
+
+Linux uses bash by default. `~/.zshrc` is already set up, so you only need zsh installed:
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply mkilivan
+chsh -s "$(command -v zsh)"   # install zsh first if it's missing
 ```
 
-Both shell configs add `~/.local/bin` to `PATH` on Linux and macOS. On Apple
-Silicon Macs, they also initialize Homebrew from `/opt/homebrew`. Until the
-shell config is loaded, use `~/.local/bin/chezmoi` directly.
-
-### macOS
-
-Default shell is zsh — `~/.zshrc` is managed by chezmoi directly, no extra step needed.
-Run `source ~/.zshrc` after applying to update the current shell.
-
-### Linux
-
-Defaults to bash. Personal customizations are applied to `~/.bashrc.d/custom.bash`
-(from `dot_bashrc.d/custom.bash.tmpl`) and line-editing settings to `~/.inputrc`.
-The stock RHEL/Fedora `~/.bashrc` sources `~/.bashrc.d/*` automatically, so no
-extra step is needed there — open a new terminal after applying.
-
-If your `~/.bashrc` doesn't load `~/.bashrc.d` (e.g. Ubuntu's default), add it once:
-
-```bash
-echo 'for rc in ~/.bashrc.d/*; do [ -f "$rc" ] && . "$rc"; done; unset rc' >> ~/.bashrc
-```
-
-**Optional: switch to zsh.** `~/.zshrc` is already managed by chezmoi, so this just needs zsh installed and set as your login shell:
-
-```bash
-# install zsh if it's not already present
-command -v zsh &>/dev/null || sudo apt-get install -y zsh
-
-# set it as your login shell (must be listed in /etc/shells)
-chsh -s "$(command -v zsh)"
-```
-
-Log out and back in for the change to take effect.
-
-## Font setup
-
-The install script automatically installs **JetBrains Mono Nerd Font**. After it runs, set this font in your terminal emulator's font settings for prompt icons to render correctly.
+Log out and back in.
