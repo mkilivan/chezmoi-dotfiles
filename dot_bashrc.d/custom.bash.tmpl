@@ -14,8 +14,8 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
 fi
 {{ end -}}
 
-export EDITOR="code"
-export VISUAL="code"
+export EDITOR="code --wait"
+export VISUAL="code --wait"
 export BROWSER="google-chrome"
 export PAGER=less
 export LC_CTYPE=$LANG
@@ -55,7 +55,6 @@ alias sl=ls
 
 alias d="git diff"
 alias c="clear"
-alias rm="rm -f"
 alias x=extract
 
 # Directories

@@ -7,8 +7,8 @@ fi
 # fzf binary path (git install on Linux)
 [ -d "$HOME/.fzf/bin" ] && export PATH="$HOME/.fzf/bin:$PATH"
 
-export EDITOR="code"
-export VISUAL="code"
+export EDITOR="code --wait"
+export VISUAL="code --wait"
 export BROWSER="google-chrome"
 
 # Remove words one by one, instead of full path
@@ -26,15 +26,16 @@ bindkey '^Xe' edit-command-line
 ###########
 
 # List directory contents (eza replaces ls)
-alias ls='eza'
-alias lsa='eza -la --git'
-alias l='eza -la'
-alias ll='eza -l'
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza'
+  alias lsa='eza -la --git'
+  alias l='eza -la'
+  alias ll='eza -l'
+fi
 alias sl=ls
 
 alias d="git diff"
 alias c="clear"
-alias rm="rm -f"
 alias x=extract
 
 # Directories
@@ -200,4 +201,6 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 # Starship — cross-shell prompt
-eval "$(starship init zsh)"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
