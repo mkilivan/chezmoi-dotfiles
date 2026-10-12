@@ -63,3 +63,4 @@ After tpm is installed, press `prefix + I` inside tmux to install plugins (tmux-
 - **tmux clipboard**: uses `xclip -sel clip`; swap for `wl-copy` on Wayland
 - **tmux-resurrect**: saves/restores sessions across reboots (`prefix + Ctrl-s` save, `prefix + Ctrl-r` restore)
 - **git editor**: VS Code (`code --wait`)
+- **Ghostty** (macOS only, ignored on Linux via `.chezmoiignore`): `dot_config/ghostty/config`; supports OSC 52 so tmux copy over ssh reaches the Mac clipboard

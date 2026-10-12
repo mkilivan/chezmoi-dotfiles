@@ -1,0 +1,18 @@
+# Ghostty — https://ghostty.org/docs/config
+# Reload with Cmd+Shift+, ; list options with `ghostty +show-config --default --docs`
+
+# Look: match the Catppuccin Mocha theme used in tmux
+theme = Catppuccin Mocha
+font-size = 14
+window-padding-x = 6
+window-padding-y = 4
+
+# SSH: copy Ghostty's terminfo to servers on first connect, so tmux/vim on
+# Linux don't fail with "unknown terminal type 'xterm-ghostty'"
+shell-integration-features = ssh-terminfo,ssh-env
+
+# Let Option act as Alt (Alt-b / Alt-f word jumps in zsh, Alt keys in tmux/vim)
+macos-option-as-alt = true
+
+mouse-hide-while-typing = true
+window-save-state = always
