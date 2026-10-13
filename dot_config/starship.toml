@@ -224,6 +224,7 @@ Windows = "󰍲 "
 Zorin = " "
 
 [package]
+disabled = true
 symbol = "󰏗 "
 
 [perl]
@@ -245,6 +246,7 @@ symbol = " "
 symbol = " "
 
 [python]
+disabled = true
 symbol = " "
 
 [raku]
