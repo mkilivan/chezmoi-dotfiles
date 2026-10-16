@@ -71,6 +71,7 @@ symbol = " "
 symbol = " "
 
 [fortran]
+disabled = true
 symbol = " "
 
 [fossil_branch]
