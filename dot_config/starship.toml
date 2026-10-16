@@ -246,8 +246,11 @@ symbol = " "
 symbol = " "
 
 [python]
-disabled = true
 symbol = " "
+format = '[$symbol$virtualenv ]($style)'
+detect_extensions = []
+detect_files = []
+detect_folders = []
 
 [raku]
 symbol = "󱖊 "
