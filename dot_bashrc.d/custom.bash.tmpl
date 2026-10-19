@@ -40,6 +40,11 @@ shopt -s cmdhist                   # multi-line commands as one entry
 # STARSHIP_PROMPT_COMMAND and runs it from its own hook.
 PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
+# Turn off mouse tracking at each prompt, in case tmux/vim died (e.g. dropped
+# ssh) and left it on — otherwise clicks print raw escape sequences
+_reset_mouse() { printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'; }
+PROMPT_COMMAND="_reset_mouse; $PROMPT_COMMAND"
+
 ###########
 # ALIASES #
 ###########
