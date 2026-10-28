@@ -1,0 +1,7 @@
+# macOS has no stock ~/.bashrc; this stands in for the RHEL/Fedora one and
+# sources ~/.bashrc.d like it does. Linux keeps the distro's own copy.
+
+for rc in "$HOME"/.bashrc.d/*; do
+    [ -f "$rc" ] && . "$rc"
+done
+unset rc

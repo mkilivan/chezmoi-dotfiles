@@ -1,0 +1,7 @@
+# macOS login shells (Terminal, Ghostty, tmux) read ~/.bash_profile, not
+# ~/.bashrc, so hand off to it. Linux keeps the distro's own copy.
+
+# Hide Apple's "default interactive shell is now zsh" banner
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"

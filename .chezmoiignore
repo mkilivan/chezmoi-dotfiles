@@ -6,3 +6,9 @@ README.md
 {{ if ne .chezmoi.os "darwin" }}
 .config/ghostty
 {{ end }}
+
+# macOS has no stock bash startup files; Linux distros ship their own
+{{ if ne .chezmoi.os "darwin" }}
+.bash_profile
+.bashrc
+{{ end }}
